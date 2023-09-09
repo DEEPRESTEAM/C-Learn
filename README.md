@@ -1,2 +1,2 @@
-# C_practice
+# c-pra
 C语言练习
