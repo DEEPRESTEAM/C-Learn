@@ -39,6 +39,8 @@ int main(int argc, char const *argv[])
      * 主要循环标志符号
     */
     int temp_ = 1;
+    int temp_1 = 1;
+    int temp_2 = 1;
 
     menu();
     
@@ -58,13 +60,13 @@ int main(int argc, char const *argv[])
         }
     }
     
-    //lay_start();
-    flag = select_fuction(flag);
+    lay_start();
+    
 
 
     while (temp_)
     {
-        
+        flag = select_fuction(flag);
         switch (flag){
 
             case 3:
@@ -81,7 +83,7 @@ int main(int argc, char const *argv[])
                     printf("输入格式有误,请重新输入\n");
                     break;
                 }
-                while (temp_)
+                while (temp_1)
                 {
                     switch (a)
                     {
@@ -102,7 +104,7 @@ int main(int argc, char const *argv[])
                             {
                                 manageCheckIdAndScore(studentId , studentScore);
                                 int flag_str_4 = 1;
-                                temp_ = judgment_calculation(flag_str_4 , temp_ , flag_);
+                                temp_1 = judgment_calculation(flag_str_4 , temp_1 , flag_);
                             }
                             if (a_admin == 2)
                             {
@@ -110,7 +112,7 @@ int main(int argc, char const *argv[])
                                 scanf("%d" , &studentId_);
                                 manageChangeStudentScore(studentId_ , studentScore);
                                 int flag_str_5 = 1;
-                                temp_ = judgment_calculation(flag_str_5 , temp_ , flag_);
+                                temp_1 = judgment_calculation(flag_str_5 , temp_1 , flag_);
                             }
                             
                             break;
@@ -131,7 +133,7 @@ int main(int argc, char const *argv[])
                             peopleCheckStudentScore(studentId_ , studentScore);
                             
                             int flag_str_5 = 1;
-                            temp_ = judgment_calculation(flag_str_5 , temp_ , flag_);
+                            temp_1 = judgment_calculation(flag_str_5 , temp_1 , flag_);
                             break;
                     }
                 }
@@ -149,7 +151,7 @@ int main(int argc, char const *argv[])
                 }
                 multiplication_table(num1 , num2);
                 int flag_str_1 = 1;
-                temp_ = judgment_calculation(flag_str_1 , temp_ , flag_);
+                temp_2 = judgment_calculation(flag_str_1 , temp_ , flag_);
                 break;
 
             case 1:
@@ -164,8 +166,11 @@ int main(int argc, char const *argv[])
                     printf("结果为：%lf\n",result);
                 }
                 int flag_str = 1;
-                temp_ = judgment_calculation(flag_str , temp_ , flag_);
+                temp_2 = judgment_calculation(flag_str , temp_ , flag_);
                 break; 
+            case 0:
+                temp_ = 0;
+                break;
         }
                   
     }

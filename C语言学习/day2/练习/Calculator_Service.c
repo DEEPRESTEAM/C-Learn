@@ -11,6 +11,7 @@ void menu(){
 
 void select_fuction_menu(){
     printf("----------------------\n");
+    printf("|   0.退出程序      |\n");
     printf("|   1.基本计算器    |\n");
     printf("|   2.九九乘法表    |\n");
     printf("|   3.学生管理系统  |\n");
@@ -78,7 +79,7 @@ int select_fuction(int flag){
         printf("请选择功能：");
         int scanf_flag = scanf("%d" , &flag);
         gets();
-        if (scanf_flag == 1 && flag >= 1 && flag <= 3)
+        if (scanf_flag == 1 && flag >= 0 && flag <= 3)
         {
             return flag;
         }else {
