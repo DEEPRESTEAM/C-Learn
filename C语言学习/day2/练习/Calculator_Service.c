@@ -4,8 +4,16 @@
  * 页面表示
 */
 void menu(){
+    printf("-------------------------------\n");
+    printf("|   欢迎你！来到<大杂烩系统>   |\n");
+    printf("-------------------------------\n");
+}
+
+void select_fuction_menu(){
     printf("----------------------\n");
-    printf("|   欢迎使用计算机   |\n");
+    printf("|   1.基本计算器    |\n");
+    printf("|   2.九九乘法表    |\n");
+    printf("|   3.学生管理系统  |\n");
     printf("----------------------\n");
 }
 
@@ -34,7 +42,7 @@ int login(int user_name , int passwd){
         if (passwd == PASSWD)
         {
             printf("登录成功\n");
-            return -1;
+            return 0;
         }
         printf("密码错误请重新登录\n");
         return 1;
@@ -45,31 +53,86 @@ int login(int user_name , int passwd){
 
 
 /**
- * 计算
+ * 延时启动
+*/
+void lay_start(){
+    printf("正在启动");
+    for (int i = 0; i < 5; i++)
+    {
+        printf(".");
+        fflush(stdout);
+        usleep(500000);
+    }
+    printf("\n");
+    
+}
+
+/**
+ * 选择功能
+*/
+int select_fuction(int flag){
+    flag = 1;
+    select_fuction_menu();
+    while (flag)
+    {
+        printf("请选择功能：");
+        int scanf_flag = scanf("%d" , &flag);
+        gets();
+        if (scanf_flag == 1 && flag >= 1 && flag <= 3)
+        {
+            return flag;
+        }else {
+            printf("请输入相对应的数字\n");
+        }
+    }
+}
+
+/**
+ * 基本计算器
 */
 double compute( int num1 , int num2 , char str){
     int sum = 0;
-    if (str == '+'){
-        sum = num1 + num2;
-    }
+    if (str == '+' || str == '-' || str == '*' || str == '/' || str == '%')
+    {
+        if (str == '+'){
+            sum = num1 + num2;
+        }
 
-    if (str == '-'){
-        sum = num1 - num2;
-    }
+        if (str == '-'){
+            sum = num1 - num2;
+        }
 
-    if (str == '*'){
-        sum = num1 * num2;
-    }
+        if (str == '*'){
+            sum = num1 * num2;
+        }
 
-    if (str == '/'){
-        sum = num1 / num2;
-    }
-    
-    if (str == '%'){
-        sum = num1 % num2;
-    }
+        if (str == '/'){
+            sum = num1 / num2;
+        }
+        
+        if (str == '%'){
+            sum = num1 % num2;
+        }
 
-    return sum;
+        return sum;
+    }else{
+        printf("请输入正确的基本运算符\n");
+    }
+    return 0;
+}
+
+/**
+ * 九九乘法表
+*/
+void multiplication_table(int num1 , int num2){
+    for (int i = 1 ; i <= num1 ; i++)
+    {
+        for (int j = 1 ; j <= num2; j++)
+        {
+            printf("%d * %d = %-5d" , i , j , i * j);
+        }
+        printf("\n");
+    }
 }
 
 /**
@@ -77,7 +140,7 @@ double compute( int num1 , int num2 , char str){
 */
 int judgment_calculation(int flag_str , int temp_ , char flag_){
      while (flag_str){
-        printf("是否继续计算？(y/n): ");
+        printf("是否继续执行？(y/n): ");
         scanf("%c" , &flag_);
         char ch = gets();
         if (flag_ == 'y')
@@ -92,5 +155,47 @@ int judgment_calculation(int flag_str , int temp_ , char flag_){
             printf("别瞎几把乱搞\n");
         }
     }
-    return temp_;
+    return temp_; 
+   
 }
+
+void manageCheckIdAndScore(int studentId[] , int studentScore[]){
+    for (int i = 0; i < MAX; i++)
+    {
+        printf("学号：%d    成绩：%d \n" , studentId[i] , studentScore[i]);
+    }
+    
+}
+
+void peopleCheckStudentScore(int studentId , int studentScore[]){
+   printf("学号：%d    成绩：%d \n" , studentId , studentScore[studentId-1]);
+}
+
+
+/**
+ * 管理员更改学生成绩
+*/
+void manageChangeStudentScore(int studentId , int studentScore[]){
+    int flag = 1;
+    while (flag)
+    {
+        int studentNewScore = 0;
+        if (studentId > 0 && studentId <= MAX )
+        {
+            printf("当前学生成绩为%d，请问你需要将该同学的成绩改为多少：" , studentScore[studentId -1]);
+            int scanf_temp = scanf("%d" , &studentNewScore);
+            gets();
+            if (scanf_temp == 0 || studentNewScore >100)
+            {
+                printf("别瞎几把乱输\n");
+                continue;
+            }else{
+                studentScore[studentId -1] = studentNewScore;
+                flag = judgment_calculation(1,1,'0');
+            }
+            
+        }
+    }
+    
+}
+
