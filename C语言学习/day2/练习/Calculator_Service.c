@@ -149,6 +149,30 @@ int judgment_calculation(int flag_str , int temp_ , char flag_){
             break;
         }
         if (flag_ == 'n'){
+            temp_ = 1;
+            printf("谢谢用户使用，欢迎下次光临\n");
+            break;
+        }else{
+            printf("别瞎几把乱搞\n");
+        }
+    }
+    return temp_; 
+   
+}
+
+/**
+ * 判断是否继续计算
+*/
+int judgment_calculation_m(int flag_str , int temp_ , char flag_){
+     while (flag_str){
+        printf("是否继续执行？(y/n): ");
+        scanf("%c" , &flag_);
+        char ch = gets();
+        if (flag_ == 'y')
+        {
+            break;
+        }
+        if (flag_ == 'n'){
             temp_ = 0;
             printf("谢谢用户使用，欢迎下次光临\n");
             break;
@@ -192,7 +216,7 @@ void manageChangeStudentScore(int studentId , int studentScore[]){
                 continue;
             }else{
                 studentScore[studentId -1] = studentNewScore;
-                flag = judgment_calculation(1,1,'0');
+                flag = judgment_calculation_m(1,1,'0');
             }
             
         }

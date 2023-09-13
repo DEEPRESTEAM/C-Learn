@@ -54,6 +54,8 @@ void multiplication_table(int , int);
 */
 int judgment_calculation(int , int , char);
 
+int judgment_calculation_m(int flag_str , int temp_ , char flag_);
+
 /**
  * 管理员查询方法，可查询到所有学员，不需要输入学员学号
 */

@@ -41,6 +41,7 @@ int main(int argc, char const *argv[])
     int temp_ = 1;
     int temp_1 = 1;
     int temp_2 = 1;
+    int temp_3 = 1;
 
     menu();
     
@@ -66,11 +67,18 @@ int main(int argc, char const *argv[])
 
     while (temp_)
     {
-        flag = select_fuction(flag);
+        while (temp_2)
+        {
+             flag = select_fuction(flag);
+             break;
+        }
+        
+       
         switch (flag){
 
             case 3:
                 a = 0;
+                temp_1 = 1;
                 printf("欢迎来到学生管理系统\n");
                 printf("选择登录人员\n");
                 printf("1.管理员\n");
@@ -92,27 +100,32 @@ int main(int argc, char const *argv[])
                             printf("管理员功能选择\n");
                             printf("1、查询成绩\n");
                             printf("2、更改成绩\n");
+                            printf("3、回到主页面\n");
                             printf("请输入所需要的功能:");
                             int scanf_4 = scanf("%d" , &a_admin);
                             gets();
                             printf("%d" , a_admin);
-                            if (a_admin >2 || a_admin < 1 )
+                            if (a_admin > 4 || a_admin < 1 )
                             {
                                 printf("输入格式错误\n");
                             }
                             if (a_admin == 1)
                             {
                                 manageCheckIdAndScore(studentId , studentScore);
-                                int flag_str_4 = 1;
-                                temp_1 = judgment_calculation(flag_str_4 , temp_1 , flag_);
+                                //int flag_str_4 = 1;
+                                //temp_1 = judgment_calculation(flag_str_4 , temp_1 , flag_);
                             }
                             if (a_admin == 2)
                             {
                                 printf("请输入需要更改成绩学生的学号：");
                                 scanf("%d" , &studentId_);
                                 manageChangeStudentScore(studentId_ , studentScore);
-                                int flag_str_5 = 1;
-                                temp_1 = judgment_calculation(flag_str_5 , temp_1 , flag_);
+                                //int flag_str_5 = 1;
+                                //temp_1 = judgment_calculation(flag_str_5 , temp_1 , flag_);
+                            }
+                            if (a_admin == 3)
+                            {
+                                temp_1 = 0;
                             }
                             
                             break;
@@ -120,6 +133,7 @@ int main(int argc, char const *argv[])
                         case 2:
                             printf("普通人员功能选择\n");
                             printf("1、查询成绩\n");
+                            printf("2、回到主页面\n");
                             printf("请输入所需要的功能：");
                             int scanf_5 = scanf("%d" , &a_admin);
                             gets();
@@ -127,13 +141,19 @@ int main(int argc, char const *argv[])
                             {
                                 printf("输入格式错误\n");
                             }
-                            printf("输入所需查询的学号:");
-                            scanf("%d" , &studentId_);
-                            gets();
+                            while(temp_3){
+                                printf("输入所需查询的学号:");
+                                scanf("%d" , &studentId_);
+                                gets();
+                                if (studentId_ >= MAX)
+                                {
+                                    printf("没有这个学生，请重新输入\n");
+                                }else{
+                                    temp_3 = 0;
+                                }
+                                
+                            }
                             peopleCheckStudentScore(studentId_ , studentScore);
-                            
-                            int flag_str_5 = 1;
-                            temp_1 = judgment_calculation(flag_str_5 , temp_1 , flag_);
                             break;
                     }
                 }
@@ -147,11 +167,12 @@ int main(int argc, char const *argv[])
                 if (num1 > 10 || num2 >10 || num1 < num2 || temp != 2)
                 {
                     printf("输入有误请重新输入");
+                    temp_2 = 0;
                     break;
                 }
                 multiplication_table(num1 , num2);
                 int flag_str_1 = 1;
-                temp_2 = judgment_calculation(flag_str_1 , temp_ , flag_);
+                temp_2 = judgment_calculation(flag_str_1 , 0 , flag_);
                 break;
 
             case 1:
@@ -166,7 +187,7 @@ int main(int argc, char const *argv[])
                     printf("结果为：%lf\n",result);
                 }
                 int flag_str = 1;
-                temp_2 = judgment_calculation(flag_str , temp_ , flag_);
+                temp_2 = judgment_calculation(flag_str , 0 , flag_);
                 break; 
             case 0:
                 temp_ = 0;
