@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
         if (count == 5)
         {
             printf("老铁，不是这么玩的，算了给你点提示\n");
-            printf("密码提示：用户所在的班级 \n");
+            printf("密码提示：用户所在的班级 \n\n");
         }
         if (count == 10)
         {
@@ -89,6 +89,7 @@ int main(int argc, char const *argv[])
                 if (scanf_3 == 0 || a >3 || a<0)
                 {
                     printf("输入格式有误,请重新输入\n");
+                    temp_2 = 0;
                     break;
                 }
                 while (temp_1)
@@ -104,7 +105,6 @@ int main(int argc, char const *argv[])
                             printf("请输入所需要的功能:");
                             int scanf_4 = scanf("%d" , &a_admin);
                             gets();
-                            printf("%d" , a_admin);
                             if (a_admin > 4 || a_admin < 1 )
                             {
                                 printf("输入格式错误\n");
@@ -150,6 +150,7 @@ int main(int argc, char const *argv[])
                                     printf("没有这个学生，请重新输入\n");
                                 }else{
                                     temp_3 = 0;
+                                    //temp_2 = 1;
                                 }
                                 
                             }
