@@ -14,16 +14,18 @@ int strlen_u(char * buf){
 }
 //实现字符串的对比(相同为1，不同为0)
 int my_strcmp(char str1[] , char str2[]){
-    for (int i = 0; i < sizeof(str1); i++)
+    while (*str1)
     {
-        if (str1[i] == str2[i])
+        if (*str1 != *str2)
         {
-            return 1;        
+            return 0;
         }
+        str1++;
+        str2++;
     }
-    return 0;
-    
+    return 1;
 }
+
 
 /**
  * 实现字符串复制会覆盖复制的那份
@@ -67,6 +69,16 @@ void my_strcpy(char str1[] , char str2[]){
 
     int main(int argc, char const *argv[])
     {
+        char arr1[5]={"hello"};
+        char arr2[5]={"hello"};
+        int as = my_strcmp(arr1 , arr2);
+        if (as)
+        {
+            printf("字符串相同\n");
+        }else{
+            printf("字符串不同\n");
+        }
+        
         return 0;
     }
     
