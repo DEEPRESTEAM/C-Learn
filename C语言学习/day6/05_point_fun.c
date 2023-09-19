@@ -9,7 +9,7 @@ typedef struct student
  
 //比较两个学生的年龄
 int compareByAge(Student stu1, Student stu2)
- {
+{
     return stu1.age > stu2.age ? 1 : 0;
 }
  
