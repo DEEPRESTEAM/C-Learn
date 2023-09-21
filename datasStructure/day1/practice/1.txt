@@ -1,0 +1,55 @@
+一、
+1、A
+2、Ｂ
+3、C
+４、Ｃ
+５、Ｂ
+二、
+１、没有关系得集合
+２、线性关系
+３、树形关系
+４、图形关系
+
+数据存储类型：
+顺势存储
+链式存储
+索引存储
+散列存储
+
+数据类型L：
+基本类型，引用类型
+
+三：
+//在任意位置插入节点
+int optionalPositionInsert(node_t * head , int position , int newdata){
+    //参数判断
+    int i = 0;
+    if (head == NULL || position < 0)
+    {
+        perror("this LinkList is illage\n");
+        return -1;
+    }
+    node_t * temp  = head;
+    while (temp != NULL && i < position-1)
+    {
+        i++;
+        temp = temp->next;
+    }
+    if (temp == NULL)
+    {
+        printf("没找到该位置\n");
+        return -1;
+    }
+    
+    //申请空间
+    node_t * newNode = (node_t *)malloc(sizeof(node_t));
+    if (newNode == NULL)
+    {
+        perror("newNode malloc error\n");
+        return -1;
+    }
+    //在中间插入数据
+    newNode->num = newdata;
+    newNode->next = temp->next;
+    temp->next = newNode;
+}
