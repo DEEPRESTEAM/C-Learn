@@ -21,11 +21,10 @@ void inFile(student * stu , FILE * file , int length){
     {
         fprintf(file , " %d %s %s %s %d %d\n " , stu[temp].class , stu[temp].user , stu[temp].passwd , stu[temp].name , stu[temp].grade , stu[temp].stuId);
         temp++;
-        printf("写入完成\n");
     }
+    printf("写入完成\n");
     
 } 
-
 
 // //求出结构体的长度
 // int length(student * stu){
@@ -53,7 +52,7 @@ void menueFather(int temp){
 */
 void menueStudent(){
     printf("-------------------------------------\n");
-    printf("|       0:退出学生管理系统           |\n");
+    printf("|       0:退出学生管理系统          |\n");
     printf("|       1:查询成绩                  |\n");
     printf("|       2:工作人员正在开发中...     |\n");
     printf("-------------------------------------\n");
@@ -96,7 +95,6 @@ int login( student * stu , int length){
                 if (!strcmp(user , "1000")){
                     if(!strcmp(stu[i].passwd , passwd  ))
                     {
-                        printf("登录成功\n");
                         return 2;
                     }else if (count == 5)
                     {
@@ -106,13 +104,11 @@ int login( student * stu , int length){
                         printf("密码输入错误，请重新输入\n");
                         count++;
                         flag = 0;
-                        printf("%d\n" ,count );
                         break;
                     } 
                 }else{
                     if(!strcmp(stu[i].passwd , passwd  ))
                     {
-                        printf("登录成功\n");
                         return 1;
                     }else if (count == 5)
                     {
@@ -122,7 +118,6 @@ int login( student * stu , int length){
                         printf("密码输入错误，请重新输入\n");
                         count++;
                         flag = 0;
-                        printf("%d\n" ,count );
                         break;
                     } 
                 }
@@ -137,7 +132,6 @@ int login( student * stu , int length){
         {
             printf("账号错误\n");
             count++;
-            printf("%d\n" , count);
             break;
         }
         
@@ -239,9 +233,6 @@ void functionSelection(student * stu , FILE * file , int flag , int length){
             }
         }
     }
-    
-    
-    
 }
 
 /**
@@ -286,7 +277,7 @@ int gradeJudgment(int grade){
  * 老师增加学员信息
 */
 void addStudent(student * stu , int length , FILE * file){
-    
+    int flag = 1;
     while (1)
     {
         int temp = 0;
@@ -302,10 +293,21 @@ void addStudent(student * stu , int length , FILE * file){
         printf("请输入所需添加的学员\n");
         scanf("%d %s %s %s %d %d" , &stu[temp].class , stu[temp].user , stu[temp].passwd , stu[temp].name , &stu[temp].grade , &stu[temp].stuId);
         prinfStruct(stu , length);
+        printf("是否继续增加学员:(1:0)\n");
+        scanf("%d" , &flag);
+        getchar();
+        if (flag == 1)
+        {
+            continue;
+        }else{
+            break;
+        }
+        
     }
-    
-   
+
 }
+
+
 /**
  * 老师删除学员信息
 */
@@ -314,12 +316,12 @@ void deleteStudent(student * stu , int length, FILE * file){
     printf("请输入需要删除学生的id:");
     scanf("%d" , &userId);
     getchar();
-        stu[userId].class = 0;
-        strcpy(stu[userId].user , "0");
-        strcpy(stu[userId].passwd , "0");
-        strcpy(stu[userId].name , "0");
-        stu[userId].grade = 0;
-        stu[userId].stuId = 0;
+    stu[userId].class = 0;
+    strcpy(stu[userId].user , "0");
+    strcpy(stu[userId].passwd , "0");
+    strcpy(stu[userId].name , "0");
+    stu[userId].grade = 0;
+    stu[userId].stuId = 0;
     selectAll(stu , length);
 }
 /**

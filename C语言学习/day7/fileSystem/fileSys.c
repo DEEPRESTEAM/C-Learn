@@ -13,8 +13,13 @@ int main(int argc, char const *argv[])
     if (temp == 0 )
     {
         return 0;
-    }
+    } 
+    printf("登录成功\n");
+    sleep(1);
+    system("clear");
     menueFather(temp);
     functionSelection(stu , fp , temp , length);
+    rewind(fp);
+    inFile(stu , fp , length);
     return 0;
 }

@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
     
     while (flag)
     {
-        flag = scanf_user(user_name , user_passwd );
+        scanf_user(user_name , user_passwd );
         count++;
         if (count == 5)
         {

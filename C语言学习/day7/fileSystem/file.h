@@ -2,6 +2,8 @@
 #define __FILE_H_
 #include<stdio.h>
 #include<string.h>
+#include<unistd.h>
+#include<stdlib.h>
 #define MAX 255
 #define LENGTH 20;
 typedef struct student
@@ -103,5 +105,12 @@ void recomposeStudent(student * stu , int length , FILE * file);
  * 老师查询所有学生
 */
 void selectAll(student * stu , int length);
+
+
+/**
+ * 学员文件导出
+*/
+void saveFile();
+
 
 #endif
