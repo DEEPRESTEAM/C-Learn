@@ -96,6 +96,10 @@ int insertTailLinkList(node_t * head , int num){
 }
 
 
+
+
+
+
 //根据数据大小插入数据
 int insetData(node_t * head ,  int newdata){
     //参数判断
@@ -174,35 +178,159 @@ void OutputLinklistNodes(node_t * head){
         temp = temp->next;
     }
     printf("节点个数:%d\n" , count);
+}
+
+
+
+
+//删除某个节点
+int insertDeleteNode(node_t * head , int position ){
+    int i = 0;
+    if (head == NULL || position <= 0)
+    {
+        perror("this LinkList is illage\n");
+        return -1;
+    }
+    node_t * temp  = head;
+    //找到要删除节点的前一个位置
+    while (temp != NULL && i < position -1 )
+    {
+        i++;
+        temp = temp->next;
+    }
+    //将上一个节点赋值给p
+    node_t * p = temp;
     
-    
+    //说明要删除的节点在最后面
+    if (temp->next == NULL)
+    { 
+        printf("没找到\n");
+        return 1;
+    }else{
+        //查找的节点不在最后一个元素
+        //移动到要查找的位置
+         temp = temp->next;
+    }
+    //传出数据
+    //* data = temp->num;
+    //如果要删除的节点不在最后面
+    p->next = temp->next;
+    //temp->next = NULL;
+    free(temp);    
+}
+
+//删除头节点（数据头节点）
+void  deleteHeadLinkList(node_t * head , int * outdata){
+    if (head == NULL || head->next == NULL )
+    {
+        perror("Linklist is illage || Linklist is empty\n");
+        return;
+    }
+    node_t * temps = head->next;
+    *outdata = temps->num;
+    //修改指针
+    head->next = temps->next;
+    free(temps);
+}
+
+//删除尾节点
+void deleteTailLinkList(node_t * head  , int * output){
+    if (head == NULL || head->next == NULL )
+    {
+        perror("Linklist is illage || Linklist is empty\n");
+        return;
+    }
+    node_t * temp = head;
+    while (temp->next->next != NULL)
+    {  
+        temp = temp->next;
+    }
+    *output = temp->next->num;
+    free(temp->next);
+    temp->next = NULL;
     
 }
 
-//删除某个节点
-// int insertDeleteNode(node_t * head , int position){
-//     if (head == NULL || position < 0)
+
+//递归删除数据
+void deletLinklist(node_t * head){
+    if (head == NULL || head->next == NULL )
+    {
+        perror("this LinkList is illage\n");
+        return;
+    }
+    node_t * temp  = head;
+    node_t * p = NULL;
+    //找到要删除节点的前一个位置
+    while (temp->next != NULL)
+    {
+        if(temp->next->next == NULL){
+            p = temp;
+        }
+        temp = temp->next;
+    }
+    p->next = NULL;
+    free(temp);
+    deletLinklist(head);
+}
+
+//按内容查找并删除节点
+void deleteLinklistByContent(node_t * head , int num , int * number ){
+    int count = 0;
+    if (head == NULL || head->next == NULL)
+    {
+        perror("this LinkList is illage || this LinkList is empty\n");
+        return;
+    }
+    node_t * temp = head;
+    while (temp != NULL && temp->next->num != num)
+    {
+        if (temp->next->next == NULL && temp->next->num != num)
+        {
+            printf("查无此数据\n");
+            return;
+        } 
+        temp = temp->next;
+        
+    }
+    free(temp->next);
+    temp->next = temp->next->next;
+    node_t * temp1 = head;
+    while (temp1 != NULL)
+    {
+        if (temp1->num == num)
+        {
+            *number++ = count;
+            deleteLinklistByContent(head , num , number);
+        }
+        count++;
+        temp1 = temp1->next;
+    }
+    return;
+
+}
+// void deleteLinklistByContentFather(node_t * head , int num , int * number){
+//     int count = 0;
+//     node_t * temp = head;
+//     while (temp != NULL)
 //     {
-//         perror("this LinkList is illage\n");
-//         return -1;
-//     }
-//     node_t * temp  = head;
-//     while (temp != NULL && temp->num != position)
-//     {
+//         if (temp->num == num)
+//         {
+//             *number++ = count;
+//             deleteLinklistByContent(head , num);
+//         }
+//         count++;
 //         temp = temp->next;
 //     }
 //     if (temp == NULL)
 //     {
-//         printf("没找到该位置\n");
-//         return -1;
+//          printf("查无此数据\n");
 //     }
-//     if (temp->next == NULL)
-//     {
-//         printf("删除")
-//     }
-    
-    
 // }
+
+
+
+
 
 //查找某个节点的位置
 void find(node_t * head , int position){
@@ -210,7 +338,7 @@ void find(node_t * head , int position){
      int i = 0;
     if (head == NULL || position < 0)
     {
-        perror("this LinkList is illage\n");
+        perror("this Lin{kList is illage\n");
         return;
     }
     node_t * temp  = head;
@@ -226,6 +354,57 @@ void find(node_t * head , int position){
     }
     printf("%d\n" , temp->num);
     
+}
+
+
+//按内容查找当前节点的位置
+int findByContent(node_t * head , int data , int * i){
+    int flag = 0;
+    if (head == NULL || head->next == NULL)
+    {
+        perror("this LinkList is illage || this LinkList is empty\n");
+        return -1;
+    }
+    node_t * temp = head;
+    while (temp != NULL)
+    {
+        if (temp->num == data)
+        {
+            *i++ = flag;
+        }
+        flag++;
+        temp = temp->next;
+    }
+    if (temp == NULL)
+    {
+        perror("this Linklist is not element\n");
+        return -1;
+    }
+    
+    return 1;    
+}
+
+//修改任意节点的值
+int changeData(node_t * head , int index , int newdata){
+    if (head == NULL || head->next == NULL || index <= 0)
+    {
+        perror("this LinkList is illage || this LinkList is empty\n");
+        return -1;;
+    }
+    int i = 0;
+    node_t * temp = head;
+    while (temp != NULL && i < index)
+    {
+        i++;
+        temp = temp->next;
+    }
+    if (temp == NULL)
+    {
+        printf("index is out of range\n");
+        return -1;
+    }
+    temp->num = newdata;
+    return 0;
 }
 
 //非递归打印
@@ -288,7 +467,7 @@ int main(int argc, char const *argv[])
     //如果没写free
     //也会被父进程把3G用户内存给释放掉,3G内存包括堆空间和栈空间
     //将数据写入到链表中
-    int arr[10] = {1,2,3,4,5,6,7,8,9,10};
+    int arr[10] = {1,9,9,4,5,9,7,8,9,10};
     for (int i = 0; i < 10; i++)
     {
         int result = insertTailLinkList(head ,arr[i] );
@@ -299,14 +478,40 @@ int main(int argc, char const *argv[])
         //printf("%d \n" , result);
     }
     // printf("%d , %s\n" , head->next->num , head->next->name);
-    printf("------------------------------\n");
-    // head->next->name = "非空";
-    // printf("%d , %s\n" , head->next->num , head->next->name);
-    //insetData(head , 78);
-    optionalPositionInsert(head , 11 , 100);
+    // printf("------------------------------\n");
+    // // head->next->name = "非空";
+    // // printf("%d , %s\n" , head->next->num , head->next->name);
+    // //insetData(head , 78);
+    // optionalPositionInsert(head , 11 , 100);
+     
+    // putchar('\n');
+    // find(head , 1);
+    // OutputLinklistNodes(head);
+    //删除某个节点
+    //insertDeleteNode(head , 2);
+    //int a;
+    //deleteHeadLinkList(head ,&a );
+    //printf("%d\n" , a);
+    //deleteTailLinkList(head , &a);
+    // printf("%d\n" , a);
+    //print(head);
+    int arr1[10]={0};
+    deleteLinklistByContent(head , 9 ,arr);// printf("%d" , head->next->num);
+    //changeData(head , -1 , 100);
+    
+    //deletLinklist(head);
+    
+    // findByContent(head , 11 , arr1);
+    int * p = arr1;
+
+    while (*p)
+    {
+        printf("%d  " , *p++);
+    }
+    printf("\n");
+    //printf("改内容节点个数%d\n" , findByContent(head , 1));
+    //printf("------------------------------------------\n");
     print(head);
-    putchar('\n');
-    find(head , 1);
-    OutputLinklistNodes(head);
+    //printf("%d\n" , head->num);
     return 0;
 }

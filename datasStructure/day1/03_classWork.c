@@ -52,15 +52,15 @@ int insertTailLinkList(node_t * head , char * name , int passwd){
         perror("newNode malloc error\n");
         return -1;
     }
-    while (T->T != NULL)
+    while (T->next != NULL)
     {  
-        head = head->next; 
+        T = T->next; 
     }
 
     //填写节点中的数据
     //newNode->userm.name = name;
     strcpy(newNode->userm.name ,name);
-    //printf("你输入的数据是：%s\n" , head->userm.name);
+    printf("你输入的数据是：%s\n" , head->userm.name);
     newNode->userm.passwd = passwd;
     //填写节点中的指针部分
     newNode->next = T->next;
