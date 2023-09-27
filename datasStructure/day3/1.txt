@@ -1,0 +1,21 @@
+1、A
+2、C
+3、C
+4、D
+5、B
+二：
+1、mystack.arr[mystack->top] = malloc(sizeof(car_t));
+2、memcpy(mystack->arr[mystack->top],car,sizeof(car_t));
+3、mystack->top++;
+三：
+int popStack(stack_t * stack , car_t * car){
+    if(stack == NULL || stack->top == 0 || car == NULL){
+        printf("ERROR！\n");
+        return -1;
+    }
+    stack->top--;
+    memcpy(car , stack->arr[stack->top] , sizeof(car_t));
+    free(stack->arr[stack->top]);
+    stack->arr[stack->top] = NULL;
+    return 0;
+}

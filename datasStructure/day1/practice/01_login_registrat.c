@@ -13,12 +13,13 @@ typedef struct ticket
     char date[MAX];             //出发日期
     char originalPlace[MAX];    //起始地
     char destination[MAX];      //目的地
+    int id;                      //序号
     double price;               //价格
 }tickets;
 
 
-//大厅显示
-typedef struct stateRoom
+//航班显示
+typedef struct stateFilght
 {
     char entrance[MAX];         //入口
     char flight[MAX];           //航班
@@ -26,9 +27,12 @@ typedef struct stateRoom
     char originalPlace[MAX];    //起始地
     char destination[MAX];      //目的地
     char seatNumber[MAX];       //座位号
+    int id;                     //序号
     int  * tickets;               //票量
-}room;
+}flights;
 
+
+#if 0
 //管理员用户
 typedef struct Admins
 {
@@ -43,26 +47,27 @@ typedef struct Admins
     room rooms[MAX];            //大厅显示内容
     
 }admins;
+#endif
 
-//普通用户
+//用户
 typedef struct user{
     tickets tick[MAX];
-    room romms[MAX];         //大厅显示
-    int id;                 //id自增
-    int uid;                //账户id自增
-    int accountNumber;      //账户号
-    char passwd[MAX];       //密码
-    long int phone;         //电话号码
-    int jurisdiction;       //账号权限 
+    flights flight[MAX];         //航班显示
+    int id;                     //id自增
+    int uid;                    //账户id自增
+    int accountNumber;          //账户号
+    char passwd[MAX];           //密码
+    long int phone;             //电话号码
+    int jurisdiction;           //账号权限 
     unsigned long long int idNumber; //身份证号 
-    char name[MAX];         //姓名
+    char name[MAX];             //姓名
 }users;
 
 typedef struct note_s{
     struct note_s * pre;    //直接前置
-    struct note_s * next;   //直接后驱
+    struct note_s * next;   //直接后驱  
     users user;//普通用户
-    admins admin;//管理员
+    //admins admin;//管理员
 }linklist;
 
 //登陆界面
@@ -128,7 +133,7 @@ linklist * creatHeadNode(){
 }
 
 //双向链表插入新的节点(尾插)
-void insertTailNewNode(linklist * head , users user , admins admin){
+void insertTailNewNode(linklist * head , users user){
 
 }
 
@@ -138,7 +143,7 @@ void insertHeadNewNode(){
 }
 
 //双向链表的头部插入(链表的创建)
-void insertHeadToLinklist(linklist * head , users user , admins admin){
+void insertHeadToLinklist(linklist * head , users user){
     if (head == NULL)
     {
         printf("linklist is illage\n");

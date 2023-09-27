@@ -1,0 +1,78 @@
+一：
+1、C
+2、C
+3、A
+4、B
+5、B
+二：
+1、n  1
+2、前驱节点 后继节点
+3、HL->next == NULL  HL->next == HL;
+三:
+
+
+typedef struct stu
+{
+    char name[20];
+    int age;
+}stu_t;
+
+typedef struct node
+{
+    //数据部分 根据实际需求进行 申请空间
+    stu_t * stus;
+    //指针域
+    struct node * next;
+}node_t;
+
+
+
+
+/// @brief 创建链表(头节点)
+/// @return //返回创建链表后的头节点
+linklist *creatHeadNode()
+{
+    linklist *head = malloc(sizeof(linklist));
+    if (head == NULL)
+    {
+        return NULL;
+    }
+    head->student = NULL;
+    head->next = head;
+    return head;
+}
+
+
+
+
+
+typedef void(showkind)(stu_t *stu);
+
+void showName(stu_t *stu)
+{
+    printf("name = %s \n", stu->name);
+}
+void showAge(stu_t *stu)
+{
+    printf("age = %d \n", stu->age);
+}
+void showAll(stu_t *stu)
+{
+    printf("name = %s age = %d\n", stu->name, stu->age);
+}
+
+/// @brief 打印单向循环链表
+void linklistPrintf(linklist *head, showkind *showkind)
+{
+    if (head == NULL || head->next == NULL)
+    {
+        printf("此链表不存\n");
+        return;
+    }
+    linklist *temp = head->next;
+    while (temp != head)
+    {
+        showkind(temp->student);
+        temp = temp->next;
+    }
+}

@@ -161,12 +161,12 @@ int optionalPositionInsert(node_t * head , int position , int newdata){
     temp->next = newNode;
 }
 //输出链表节点个数
-void OutputLinklistNodes(node_t * head){
+int outputLinklistNodes(node_t * head){
     int count = 0;
     if (head == NULL)
     {
         perror("newNode malloc error\n");
-        return;
+        return 0;
     }
     if (head->next == NULL)
     {
@@ -178,6 +178,7 @@ void OutputLinklistNodes(node_t * head){
         temp = temp->next;
     }
     printf("节点个数:%d\n" , count);
+    return count;
 }
 
 
@@ -251,14 +252,38 @@ void deleteTailLinkList(node_t * head  , int * output){
     
 }
 
-
-//递归删除数据
-void deletLinklist(node_t * head){
-    if (head == NULL || head->next == NULL )
+//非递归删除数据
+void deleteAllLinklist(node_t * head){
+    if (head == NULL || head->next == NULL)
     {
-        perror("this LinkList is illage\n");
+        printf("无此链表，或链表为空\n");
         return;
     }
+    node_t * temp = head->next , *before = NULL;
+    head->next = NULL;
+    while (temp != NULL)
+    {
+        before = temp;
+        temp = temp->next;
+        free(before);
+    }
+    printf("链表已经删除\n");
+    return;
+    
+}
+//递归删除数据
+void deletLinklist(node_t * head){
+    if (head->next == NULL )
+    {
+        perror("链表删除成功");
+        return;
+    }
+    if (head == NULL)
+    {
+        printf("this LinkList is illage\n");
+        return;
+    }
+    
     node_t * temp  = head;
     node_t * p = NULL;
     //找到要删除节点的前一个位置
@@ -428,6 +453,88 @@ void showLinkList(node_t * head){
     putchar(10);   
 }
 
+//将无序链表排序
+void sortLinklist(node_t * head){
+    if (head == NULL || head->next == NULL)
+    {
+        printf("链表为空或链表不存在\n");
+        return;
+    }
+    
+}
+//销毁链表
+void destoryLinklist(node_t **head){
+  if (*head == NULL || (*head)->next == NULL)
+    {
+        printf("无此链表，或链表为空\n");
+        return;
+    }
+    node_t * temp = (*head)->next , *before = NULL;
+    (*head)->next = NULL;
+    while (temp != NULL)
+    {
+        before = temp;
+        temp = temp->next;
+        free(before);
+    }
+
+    free(*head);
+    *head = NULL;
+    printf("链表已经删除\n");
+    return;
+    
+}
+
+
+//链表的倒置（将头节点，放置尾节点处）
+void reverseLinklist(node_t * head){
+     if (head == NULL || head->next == NULL)
+     {
+        printf("链表不存在，或链表为空\n");
+        return;
+     }
+     node_t * temp = head->next->next , *before = NULL;
+     head->next->next = NULL;
+     while (temp != NULL)
+     {
+        before = temp;
+        temp = temp->next;
+        before->next = NULL;
+        insertHeadLinkList(head , before->num, "空");
+        free(before);
+     }
+     return;
+     
+     
+}
+//链表排序
+void bubbleSortLinklist(node_t * head){
+    if (head == NULL || head->next == NULL)
+    {
+        printf("链表为空，或链表不存在\n");
+        return;
+    }
+    int num = outputLinklistNodes(head);
+    int temp = 0;
+    node_t * after = NULL , *before = NULL;
+    for (int i = 0; i < num - 1; i++)
+    {
+        before = head->next;
+        after = before->next;
+        for (int j = 0; j < num -1 -i; j++)
+        {
+            if (before->num > after->num)
+            {
+                temp = before->num;
+                before->num = after->num;
+                after->num = temp;
+            }
+            before = after;
+            after = after->next;
+        }
+        
+    } 
+}
 
 //递归打印
 void recursivePrinting(node_t * T){
@@ -495,23 +602,31 @@ int main(int argc, char const *argv[])
     //deleteTailLinkList(head , &a);
     // printf("%d\n" , a);
     //print(head);
-    int arr1[10]={0};
-    deleteLinklistByContent(head , 9 ,arr);// printf("%d" , head->next->num);
+    //int arr1[10]={0};
+    //deleteLinklistByContent(head , 9 ,arr);// printf("%d" , head->next->num);
     //changeData(head , -1 , 100);
     
-    //deletLinklist(head);
+    //deleteAllLinklist(head);
     
     // findByContent(head , 11 , arr1);
-    int * p = arr1;
+    // int * p = arr1;
 
-    while (*p)
-    {
-        printf("%d  " , *p++);
-    }
-    printf("\n");
+    // while (*p)
+    // {
+    //     printf("%d  " , *p++);
+    // }
+    // printf("\n");
     //printf("改内容节点个数%d\n" , findByContent(head , 1));
-    //printf("------------------------------------------\n");
+
     print(head);
+    reverseLinklist(head);
+    printf("\n");
+    print(head);
+    bubbleSortLinklist(head);
+    print(head);
+    //printf("------------------------------------------\n");
+    //printf("%d %p\n" , head->num , head->next);
+    //print(head);
     //printf("%d\n" , head->num);
     return 0;
 }

@@ -1,24 +1,6 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
+#include"2_head.h"
 
 
-/**
- * 双向循环链表
-*/
-
-typedef struct stu
-{
-    char name[21];
-    int age;
-} stu_t;
-
-typedef struct note_t
-{
-    void * data;
-    struct note_t * pre; 
-    struct note_t * next;
-}linklist;
 
 /// @brief 头节点的初始化
 /// @return 返回创建的头节点
@@ -110,7 +92,6 @@ int findLinklistNodeCount(linklist * head){
 
 
 //双向循环链表的打印
-typedef void ( *showkind)(void * data);
 void showName(void * data){
     stu_t * stu = (stu_t *)data;
     printf("name = %s\n" , stu->name);
@@ -268,8 +249,7 @@ void insertLinklistNodeByIndex(linklist * head , int index , void * newDate , in
 }
 
 
-//根据内容，查询所有内容
-typedef int (* cmpContent) (void * data1 , void * data2);
+
 int cmpName(void * data1 , void * data2){
     stu_t * stu1 = (stu_t *)data1;
     stu_t * stu2 = (stu_t *)data2;
@@ -307,15 +287,15 @@ void findAllContentBySomeContent(linklist * head , cmpContent cmp , void * data)
 
 /// @brief 删除双向循环链表的所有数据节点(利用头插法的原理)
 /// @param head 传入头节点
-void deleteAllLinklistNode(linklist ** head){
-    if ((*head)->next == (*head))
+void deleteAllLinklistNode(linklist **head){
+    if ((*head)->next == *head)
     {
-        *head = NULL;
         free(*head);
+        *head = NULL;
         return;
     }
     
-    if (*head == NULL )
+    if ((*head) == NULL)
     {
         printf("链表不存在或链表数据节点为空\n");
         return;
@@ -324,11 +304,11 @@ void deleteAllLinklistNode(linklist ** head){
     linklist * temp = (*head)->next;
 
 
-    temp->next->pre = *head;
+    temp->next->pre = (*head);
     (*head)->next = temp->next;
     free(temp->data);
     free(temp);
-    deleteAllLinklistNode(*head);
+    deleteAllLinklistNode(head);
 }
 
 
@@ -360,7 +340,7 @@ void linklistSort(linklist * head){
 }
 
 
-
+#if 0
 int main(int argc, char const *argv[])
 {
     int arr[20] ={1,23,34,45,56,77,90,100,119};
@@ -452,3 +432,4 @@ int main(int argc, char const *argv[])
     linklistPrintf(head , showAll);
     return 0;
 }
+#endif
