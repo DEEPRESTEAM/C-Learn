@@ -10,7 +10,7 @@ queue_t * createQueue(){
     }
     //队列节点的指针跟双向循环链表的创建函数有关
     queue->datas = creat_linklistHeadNode();
-    if (queue->datas == NULL)
+    if (queue->datas == NULL) 
     {
         printf("创建双向循环链表失败\n");
         return NULL;
@@ -79,7 +79,7 @@ int destoryQueue(queue_t **queue){
         return 0;
     }
     
-    deleteAllLinklistNode(&((*queue)->datas));
+    deleteAllLinklistNode(&( (*queue)->datas) );
     free(*queue);
     *queue = NULL;
 }
