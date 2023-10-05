@@ -1,6 +1,10 @@
 #include"railway.h"
 
 
+
+
+//管理员功能集成
+
 int adminController(linklist_t * head){
     int i = 0;
     int numFun = 0;

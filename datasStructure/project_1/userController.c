@@ -1,14 +1,17 @@
 #include "railway.h"
 
-// 用户控制器
-int userController(linklist_t *head, linklist_t *user_t, int count)
+// 用户功能集成
+
+
+
+int userController(linklist_t *head, linklist_t *user_t, linklist_flight * flightHead , int count)
 {
     int i = 0;
     int ticketNums = 0;
     while (1)
     {
         int num = 0;
-        userFunctionMenue(head, count);
+        userFunctionMenue(flightHead);
         printf("请输入你想要选择的功能:");
         scanf("%d", &num);
         getchar();
@@ -19,21 +22,22 @@ int userController(linklist_t *head, linklist_t *user_t, int count)
             int num1 = 0;
             scanf("%d", &num1);
             getchar();
-            ticketNums = purchaseTickets(num1, user_t, count, head);
-            printf("%d", ticketNums);
+            ticketNums = purchaseTickets(num1, user_t, flightHead);
+            printf("--------------------------购票成功----------------------------\n");
+            sleep(1);
+            system("clear");
             break;
         case 2:
             printf("查询航班\n");
             break;
         case 3:
+            system("clear");
             userTicketController(head, user_t, ticketNums);
 
             break;
         case 4:
-            if (userCentreController(user_t, head) == 1)
-            {
-                return 1;
-            }
+            system("clear");
+            userCentreController(user_t, head);
             break;
         case 5:
             system("clear");
@@ -46,44 +50,45 @@ int userController(linklist_t *head, linklist_t *user_t, int count)
 }
 
 // 购票方法，根据前面的序号，来进行购票
-int purchaseTickets(int id, linklist_t *user1, int count, linklist_t *head)
+int purchaseTickets(int id, linklist_t *user1, linklist_flight * flightHead)
 {
-    static int flag = 0;
     static int num = 0;
     if (user1 == NULL)
     {
         printf("参数错误\n");
         return -1;
     }
-    user_t *temp = user1->user;
-    for (int i = 0; i < count; i++)
+    linklist_flight * temp = flightHead->next;
+    user_t * tempuser = user1->user;
+    while (temp != flightHead)
     {
-        if (id == head->user->flight[i].id)
+
+        if (id == temp->flights->id)
         {
             printf("请选则你的座位号\n");
             char str[MAX] = {0};
             scanf("%s", str);
             getchar();
             // 判断是否有票
-            if (head->user->flight[i].tickets > 0)
+            if (temp->flights->tickets > 0)
             {
                 /* code */
                 // 进行赋值
-                temp->tick[num].id = head->user->flight[i].id;
+                tempuser->tick[num].id = temp->flights->id;
                 // 座位号
-                strcpy(temp->tick[num].seatNumber, str);
+                strcpy(tempuser->tick[num].seatNumber, str);
                 // 入口
-                strcpy(temp->tick[num].entrance, head->user->flight[i].entrance);
+                strcpy(tempuser->tick[num].entrance, temp->flights->entrance);
                 // 出发日期
-                strcpy(temp->tick[num].date, head->user->flight[i].date);
+                strcpy(tempuser->tick[num].date, temp->flights->date);
                 // 起始地
-                strcpy(temp->tick[num].originalPlace, head->user->flight[i].originalPlace);
+                strcpy(tempuser->tick[num].originalPlace, temp->flights->originalPlace);
                 // 目的地
-                strcpy(temp->tick[num].destination, head->user->flight[i].destination);
+                strcpy(tempuser->tick[num].destination, temp->flights->destination);
                 // 价格
-                temp->tick[num].price = head->user->flight[i].price;
+                tempuser->tick[num].price = temp->flights->price;
                 // 票的数量减一
-                head->user->flight[i].tickets--;
+                temp->flights->tickets--;
                 num++;
                 return num;
             }
@@ -93,6 +98,7 @@ int purchaseTickets(int id, linklist_t *user1, int count, linklist_t *head)
                 return num;
             }
         }
+        temp = temp->next;
     }
 }
 
@@ -116,26 +122,33 @@ void userPrintfTicket(linklist_t *temp, int num)
 // 用户中心控制器
 int userCentreController(linklist_t *user, linklist_t *head)
 {
-    int funNum = 0;
-    userCentreControllerMenue();
-    printf("选择你的功能\n");
-    scanf("%d", &funNum);
-    switch (funNum)
+    while (1)
     {
-    case 1:
-        userMessage(user);
-        break;
-    case 2:
-        changeUserPasswd(user, head);
-        break;
-    case 3:
-        return bannedUser(head, user);
-    case 4:
+        int funNum = 0;
+        userCentreControllerMenue();
+        printf("选择你的功能\n");
+        scanf("%d", &funNum);
+        switch (funNum)
+        {
+        case 1:
+            userMessage(user);
+            break;
+        case 2:
+            changeUserPasswd(user, head);
+            break;
+        case 3:
+            return bannedUser(head, user);
+        case 4:
+            system("clear");
+            return 0;
+        default:
+            break;
+        }
+        sleep(1);
         system("clear");
-        return 0;
-    default:
-        break;
     }
+    
+    
 }
 
 /// @brief 查看和修改个人信息
@@ -153,7 +166,7 @@ void userMessage(linklist_t *user)
         scanf("%d", &changeNum);
         if (changeNum == 0)
         {
-            break;
+            return;
         }
         if (changeNum == 1)
         {
@@ -240,12 +253,13 @@ int userTicketController(linklist_t * head , linklist_t *user_t, int ticketNums)
             userPrintfTicket(user_t, ticketNums);
             break;
         case 2:
-            userReturnTicket(head , user_t , ticketNums);
+            //userReturnTicket();
             break;
         case 3:
             printf("用户改签\n");
             break;
         case 4:
+            system("clear");
             return 0;
         default:
             break;
@@ -256,40 +270,20 @@ int userTicketController(linklist_t * head , linklist_t *user_t, int ticketNums)
 // 用户退票
 void userReturnTicket(linklist_t *head, linklist_t *temp, int num)
 {
-    int ticketNum = 0;
-    char seat[10] = {0};
-    if (temp == NULL || num <= 0)
-    {
-        printf("参数错误\n");
-        return;
-    }
+    int retNum = 0;
     int flag = 0;
-    printf("是否退票(1/0)");
-    scanf("%d", &flag);
+    printf("输入所退票的序号");
+    scanf("%d" , &retNum);
     getchar();
+    printf("是否退票(0|1)");
+    scanf("%d" , &flag);
+    getchar();
+
     if (flag == 0)
     {
         return;
+    }else{
+
     }
-    // 执行退票步骤
-    user_t *user = temp->user;
-    printf("输入退票的序号");
-    scanf("%d", &ticketNum);
-    getchar();
-    printf("输入所退票的座位号");
-    scanf("%s", seat);
-    getchar();
-    for (int i = 0; i < num; i++)
-    {
-        if (temp->user->tick[i].id = ticketNum && !strcmp(temp->user->tick[i].entrance, seat))
-        {
-            // 删除票券操作，将票从tic数组中移除，然后将数组移动,最后每删一次将航班票券加一
-            for (int j = i; j < num - i - 1; i++)
-            {
-                memcpy(&temp->user->tick[j], &temp->user->tick[j + 1], sizeof(temp->user->tick[j]));
-            }
-            head->user->flight[ticketNum].tickets++;
-            printf("退票成功\n");
-        }
-    }
+    
 }

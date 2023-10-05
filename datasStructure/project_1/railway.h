@@ -36,7 +36,6 @@ typedef struct stateFilght
 typedef struct user
 {
     ticket_t tick[MAX];
-    flight_t flight[MAX];   // 航班显示
     int id;                 // id自增
     int uid;                // 账户id自增
     long int accountNumber; // 账户号
@@ -55,29 +54,39 @@ typedef struct note_s
     // admins admin;//管理员
 } linklist_t;
 
-//判断链表创建，用户信息读取，用户航班读取
-int prependants(linklist_t * head , FILE * file , int size);
+typedef struct note_flight
+{
+    struct note_flight *pre;
+    struct note_flight *next;
+    flight_t *flights;
+} linklist_flight;
+
+// 判断链表创建，用户信息读取，用户航班读取
+int prependants(linklist_flight *flightHead, linklist_t *head, FILE *file, int size);
 
 // 登陆界面
 void showMenu();
 
 // 登录验证
-linklist_t *login (linklist_t *head, user_t *user);
+linklist_t *login(linklist_t *head, user_t *user);
 
 // 用户忘记密码
 void userChangePsaawd(linklist_t *head, user_t *user);
 
 // 登录注册忘记密码集成
-linklist_t * loginIntegration(linklist_t *head, user_t *user, int size);
+linklist_t *loginIntegration(linklist_t *head, user_t *user, int size);
 
 // 头节点的创立
 linklist_t *creatHeadNode();
+
+// 航班存储双向循环链表的创建
+linklist_flight *creatHeadFlightNode();
 
 // 双向链表根据内容查询相关信息
 linklist_t *loginCheck(linklist_t *head, user_t *data);
 
 // 判断头节点创建是否为空
-int judgetHeadIsNull(linklist_t *head);
+int judgetHeadIsNull(linklist_t *head, linklist_flight *flightHead);
 
 // 链表插入数据
 int insertTailNewNode(linklist_t *head, user_t *user, int size);
@@ -91,32 +100,33 @@ void linkListPrintf(linklist_t *head);
 // 从文件中读取文件到链表中
 int getgetFileToLinklist(linklist_t *head, FILE *file, int size);
 
+int getFlightFileToLinklist(linklist_flight *flightHead, FILE *file);
+
 // 打开文件
 FILE *file_open(char *file_name, char *modes);
 
 int readFlightToUserNode(linklist_t *head, FILE *file);
 
-
-//打印航班信息
-void userFlightPrintf(linklist_t *head, int count);
-//中央控制器
-int centerController(linklist_t *head, user_t *user, int size , int count );
+// 打印航班信息
+void userFlightPrintf(linklist_flight * flghtHead);
+// 中央控制器
+int centerController(linklist_flight * flightHead , linklist_t *head, user_t *user, int size, int count);
 
 // 用户功能选择页面
-void userFunctionMenue(linklist_t *head, int count);
+void userFunctionMenue(linklist_flight * flightHead);
 
-//用户控制器
-int userController(linklist_t * head , linklist_t *user_t, int count);
+// 用户控制器
+int userController(linklist_t *head, linklist_t *user_t, linklist_flight * flightHead , int count);
 
 // 购票方法，根据前面的序号，来进行购票
-int purchaseTickets(int id, linklist_t *user1, int count , linklist_t * head);
+int purchaseTickets(int id, linklist_t *user1,linklist_flight * flightHead);
 
 // 打印用户飞机票
 void userPrintfTicket(linklist_t *temp, int num);
 
-//用户个人中心界面
+// 用户个人中心界面
 void userCentreControllerMenue();
-//用户中心控制器
+// 用户中心控制器
 int userCentreController(linklist_t *user, linklist_t *head);
 
 /// @brief 查看和修改个人信息
@@ -129,7 +139,7 @@ void changeUserPasswd(linklist_t *user, linklist_t *head);
 // 注销用户（注销后会直接回到登录页面）
 int bannedUser(linklist_t *head, linklist_t *users);
 
-//管理员控制器
+// 管理员控制器
 int adminController(linklist_t *head);
 
 // 删除双向循环链表中的所有节点
@@ -138,11 +148,9 @@ int deletelib(linklist_t *head);
 // 用户票券选择界面
 void userTicketControllerMenue();
 
+// 用户票券选择控制器
+int userTicketController(linklist_t *head, linklist_t *user_t, int ticketNums);
 
-//用户票券选择控制器
-int userTicketController(linklist_t * head , linklist_t * user_t , int ticketNums);
-
-
-//用户退票
+// 用户退票
 void userReturnTicket(linklist_t *head, linklist_t *temp, int num);
 #endif

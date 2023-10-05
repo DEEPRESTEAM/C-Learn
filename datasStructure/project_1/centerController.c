@@ -1,26 +1,30 @@
 #include"railway.h"
 
 
+//中央控制器
+
+
+
 //链表创建，文件读取，用户航班读取
-int prependants(linklist_t * head , FILE * file , int size){
+int prependants(linklist_flight * flightHead ,linklist_t * head , FILE * file , int size){
     system("clear");
     
-    if (judgetHeadIsNull(head))
+    if (judgetHeadIsNull(head , flightHead))
     {
         printf("创建失败\n");
         return 0;
     }
     //从用户文件读取信息到链表中
     getgetFileToLinklist(head , file , size);
-    //从航班文件读取信息到用户中
+    //从航班文件读取信息到链表中
     FILE * file1 = file_open("flight.txt" , "r+");
-    int count = readFlightToUserNode(head , file1);
+    int count = getFlightFileToLinklist(flightHead , file1);
     return count;
 }
 
 
 //中央控制器，不同的用户功能选择
-int centerController(linklist_t * head , user_t * user , int size , int count )
+int centerController(linklist_flight * flightHead , linklist_t * head , user_t * user , int size , int count )
 {   
     int i = 0;
     linklist_t * user1 = NULL;
@@ -44,7 +48,7 @@ int centerController(linklist_t * head , user_t * user , int size , int count )
             }
             break;
         case 0:
-            userController(head , user1 , count);
+            userController(head , user1 , flightHead, count);
             break;
         default:
             printf("错误\n");
