@@ -28,17 +28,18 @@ linklist_t *loginIntegration(linklist_t *head, user_t *user, int size)
             }
             else if (temp == -2)
             {
-                printf("账户已存在\n");
+                    printf("账户已存在\n");
             }
-            break;
+            return NULL;
         case 2:
             temp_lin = login(head, user);
             return temp_lin;
         case 3:
             userChangePsaawd(head, user);
-            break;
+            return NULL;
         case 4:
             flag_while = 0;
+            head->flag = 0;
             printf("退出成功\n");
             break;
         default:
@@ -52,8 +53,10 @@ linklist_t *loginIntegration(linklist_t *head, user_t *user, int size)
 // 用户登录
 linklist_t *login(linklist_t *head, user_t *user)
 {
+    int i = 0;
     int flag = 0;
     linklist_t *temp = NULL;
+    printf("-------------------------登录页面-------------------------\n");
     while (1)
     {
         printf("请输入你的账号:");
@@ -71,6 +74,17 @@ linklist_t *login(linklist_t *head, user_t *user)
         {
             printf("账户或密码错误\n");
             flag++;
+            if (flag == 4)
+            {
+                printf("是否取消登录:(1|0)");
+                scanf("%d" , &i);
+                getchar();
+                if (i == 1)
+                {
+                    return NULL;
+                }
+                
+            }
             continue;
         }
         else
@@ -118,9 +132,23 @@ linklist_t *loginCheck(linklist_t *head, user_t *data)
 // 用户注册
 int regist(linklist_t *head, user_t *user, int size)
 {
+    printf("-------------------------注册页面-------------------------\n");
+    
+    user->jurisdiction = 0;
+    linklist_t *temp = head->next;
+
     printf("输入电话号码:");
     scanf("%ld", &user->phone);
     getchar();
+    user->accountNumber = user->phone;
+    while (temp != head)
+    {
+        if (temp->user->accountNumber == user->accountNumber)
+        {
+            return -2;
+        }
+        temp = temp->next;
+    }
     printf("输入密码:");
     scanf("%s", user->passwd);
     getchar();
@@ -130,18 +158,6 @@ int regist(linklist_t *head, user_t *user, int size)
     printf("输入你的姓名:");
     scanf("%s", user->name);
     getchar();
-    user->accountNumber = user->phone;
-    user->jurisdiction = 0;
-    linklist_t *temp = head->next;
-    while (temp != head)
-    {
-        if (temp->user->accountNumber == user->accountNumber)
-        {
-            return -2;
-        }
-        temp = temp->next;
-    }
-
     if (!insertTailNewNode(head, user, size))
     {
         return 0;
@@ -161,8 +177,9 @@ void userChangePsaawd(linklist_t *head, user_t *user)
         return;
     }
     linklist_t *temp = head->next;
-    // 验证用户账户
-    printf("请输入你的账户:");
+    printf("------------------------修改账户密码页面------------------------\n");
+        // 验证用户账户
+        printf("请输入你的账户:");
     scanf("%ld", &user->accountNumber);
     getchar();
     while (temp != head)

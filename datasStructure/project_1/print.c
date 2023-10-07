@@ -39,7 +39,7 @@ void linkListPrintf(linklist_t *head)
     // 从前往后进行遍历
     while (temp != head)
     {
-        printf("%ld %s\n", temp->user->accountNumber, temp->user->passwd);
+        printf("序号：%d  uid：%d  账号：%ld  密码：%s  电话：%ld  权限：%d  身份证：%lld  姓名：%s\n",temp->user->id , temp->user->uid , temp->user->accountNumber , temp->user->passwd , temp->user->phone , temp->user->jurisdiction , temp->user->idNumber , temp->user->name );
         // printf("id = %d uid = %d accountNumber = %ld passwd = %s phone = %ld jurisdiction = %d idNumber = %lld name = %s \n" , temp->user->id , temp->user->uid , temp->user->accountNumber , temp->user->passwd , temp->user->phone , temp->user->jurisdiction , temp->user->idNumber , temp->user->name);
         temp = temp->next;
     }

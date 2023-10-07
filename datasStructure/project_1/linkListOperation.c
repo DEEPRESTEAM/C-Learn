@@ -67,3 +67,68 @@ void insertHeadToLinklist(linklist_t *head, user_t user)
     linklist_t *temp = head;
 }
 
+// 将航班双向循环链表删除
+void deleteFilght(linklist_flight **head)
+{
+    if ((*head)->next = *head)
+    {
+        free(*head);
+        *head = NULL;
+        return;
+    }
+    linklist_flight *temp = (*head)->next;
+    // 释放空间
+    free(temp->flights);
+    temp->flights = NULL;
+    free(temp);
+    deleteFilght(head);
+}
+
+// 主链表删除头节点
+void deleteMainLinklist(linklist_t **head)
+{
+    free((*head)->user->ticketHead);
+    (*head)->user->ticketHead = NULL;
+    free((*head)->user);
+    (*head)->user = NULL;
+    free(*head);
+    *head = NULL;
+    return;
+}
+
+// 将用户票券双向循环链表删除
+void deleteTicketLinklist(linklist_ticket **ticketHead)
+{
+    if ((*ticketHead)->next == *ticketHead)
+    {
+        free((*ticketHead)->ticket);
+        (*ticketHead)->ticket = NULL;
+        free(*ticketHead);
+        *ticketHead = NULL;
+        return;
+    }
+    linklist_ticket *temp = (*ticketHead)->next;
+    free(temp->ticket);
+    temp->ticket = NULL;
+    free(temp);
+    temp = NULL;
+    deleteTicketLinklist(ticketHead);
+}
+
+// 求出航班链表节点个数
+int FlightLinklistNodeCounts(linklist_flight *head)
+{
+    int count = 0;
+    if (head == NULL)
+    {
+        printf("链表不存在\n");
+        return -1;
+    }
+    linklist_flight *temp = head;
+    while (temp->next != head)
+    {
+        count++;
+        temp = temp->next;
+    }
+    return count;
+}

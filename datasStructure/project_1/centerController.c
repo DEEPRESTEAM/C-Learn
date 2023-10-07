@@ -24,7 +24,7 @@ int prependants(linklist_flight * flightHead ,linklist_t * head , FILE * file , 
 
 
 //中央控制器，不同的用户功能选择
-int centerController(linklist_flight * flightHead , linklist_t * head , user_t * user , int size , int count )
+int centerController(linklist_flight * flightHead , linklist_t * head , user_t * user , int size )
 {   
     int i = 0;
     linklist_t * user1 = NULL;
@@ -35,20 +35,24 @@ int centerController(linklist_flight * flightHead , linklist_t * head , user_t *
         user1 = loginIntegration(head , user , size);
         sleep(1);
         system("clear");
-        if (user1 == NULL)
+        if (head->flag == 0)
         {
             return 0;
+        }
+        if (user1 == NULL)
+        {
+            continue;
         }
         num = ((user_t *)user1->user)->jurisdiction;
         switch (num)
         {
         case 1:
-            if( adminController(head) == 1){
+            if( adminController(head , flightHead) == 1){
                 return 1;
             }
             break;
         case 0:
-            userController(head , user1 , flightHead, count);
+            userController(head , user1 , flightHead);
             break;
         default:
             printf("错误\n");

@@ -12,13 +12,14 @@ linklist_t * creatHeadNode()
 {
     linklist_t *head = malloc(sizeof(linklist_t));
     head->user = malloc(sizeof(user_t));
-    if (head == NULL || head->user == NULL)
+    if (head == NULL || head->user == NULL )
     {
         printf("申请空间失败\n");
         return NULL;
     }
     head->user->id = 0;
     head->user->uid = 100000;
+    head->flag = 1;
     head->pre = head->next = head;
     return head;
 }
@@ -35,6 +36,17 @@ linklist_flight * creatHeadFlightNode(){
     flightHead->flights = NULL;
     flightHead->next = flightHead->pre = flightHead;
     return flightHead;    
+}
+//用户票券双向循环链表的创建
+void  creatHeadTicketNode(user_t * user){
+    linklist_ticket * ticketHead = malloc(sizeof(linklist_ticket));
+    if (ticketHead == NULL)
+    {
+        printf("用户票券双向循环链表申请空间失败\n");
+    }
+    ticketHead->ticket = NULL;
+    ticketHead->next = ticketHead->pre = ticketHead;
+    user->ticketHead = ticketHead;
 }
 
 /// @brief 判断头节点是否创建成功
@@ -75,6 +87,7 @@ int getgetFileToLinklist(linklist_t *head, FILE *file, int size)
     {
         linklist_t *newNode = malloc(sizeof(linklist_t));
         newNode->user = malloc(size);
+        creatHeadTicketNode(newNode->user);
         flag = fscanf(file, "%d %d %ld %s %ld %d %lld %s", &newNode->user->id, &newNode->user->uid, &newNode->user->accountNumber, newNode->user->passwd, &newNode->user->phone, &newNode->user->jurisdiction, &newNode->user->idNumber, newNode->user->name);
         if (flag == EOF)
         {
@@ -157,5 +170,54 @@ int getFlightFileToLinklist(linklist_flight * flightHead, FILE *file)
         flightHead->pre = newNode;
     }
     return count;
+}
+
+
+//从结构体读取到文件中去
+
+//读取用户文件
+void readUserStructMesToFile(FILE * fp , linklist_t * head){
+    if (fp == NULL || head == NULL || head->next == head)
+    {
+        printf("参数错误\n");
+        return;
+    }
+    linklist_t * temp = head->next;
+    fopen("user.txt" , "w+");
+    while (temp != head)
+    {
+        //读取文件操作
+        //首先将文件清空
+        fprintf(fp, "%d %d %ld %s %ld %d %lld %s\n", temp->user->id, temp->user->uid, temp->user->accountNumber, temp->user->passwd, temp->user->phone, temp->user->jurisdiction, temp->user->idNumber, temp->user->name);
+        //再以R+打开文件
+        temp = temp->next;
+    }
+    if (temp == head)
+    {
+        printf("读取完成\n");
+    }
+    
+}
+
+//读取航班链表到文件中
+void readFlightStructToFile(linklist_flight * head , FILE * fp){
+    if (head == NULL || head->next == head || fp == NULL)
+    {
+        printf("参数错误\n");
+        return;
+    }
+    linklist_flight * temp = head->next;
+    fopen("flight.txt", "w+");
+    while (temp != head)
+    {
+        fprintf(fp, "%d %s %s %s %s %d %lf\n", temp->flights->id, temp->flights->originalPlace, temp->flights->destination, temp->flights->date, temp->flights->entrance, temp->flights->tickets, temp->flights->price);
+        temp = temp->next;
+    }
+    if (temp == head)
+    {
+        printf("航班读取完毕\n");
+    }
+    
+    
 }
 

@@ -1,0 +1,2 @@
+pro:centerController.c linkListOperation.c main.c menue.c prepare.c print.c railway.h rootController.c startController.c userController.c
+	gcc centerController.c linkListOperation.c main.c menue.c prepare.c print.c rootController.c startController.c userController.c -o pro

@@ -2,12 +2,9 @@
 
 // 用户功能集成
 
-
-
-int userController(linklist_t *head, linklist_t *user_t, linklist_flight * flightHead , int count)
+int userController(linklist_t *head, linklist_t *user_t, linklist_flight *flightHead)
 {
     int i = 0;
-    int ticketNums = 0;
     while (1)
     {
         int num = 0;
@@ -22,7 +19,7 @@ int userController(linklist_t *head, linklist_t *user_t, linklist_flight * fligh
             int num1 = 0;
             scanf("%d", &num1);
             getchar();
-            ticketNums = purchaseTickets(num1, user_t, flightHead);
+            purchaseTickets(num1, user_t, flightHead);
             printf("--------------------------购票成功----------------------------\n");
             sleep(1);
             system("clear");
@@ -32,14 +29,21 @@ int userController(linklist_t *head, linklist_t *user_t, linklist_flight * fligh
             break;
         case 3:
             system("clear");
-            userTicketController(head, user_t, ticketNums);
-
+            i = userTicketController(head, user_t, flightHead);
+            if (i == -1)
+            {
+                return -1;
+            }
             break;
         case 4:
             system("clear");
-            userCentreController(user_t, head);
+            if (userCentreController(user_t, head) == -1)
+            {
+                return -1;
+            }
             break;
         case 5:
+            // 返回上一级
             system("clear");
             return 0;
         default:
@@ -50,72 +54,108 @@ int userController(linklist_t *head, linklist_t *user_t, linklist_flight * fligh
 }
 
 // 购票方法，根据前面的序号，来进行购票
-int purchaseTickets(int id, linklist_t *user1, linklist_flight * flightHead)
+int purchaseTickets(int id, linklist_t *user1, linklist_flight *flightHead)
 {
-    static int num = 0;
-    if (user1 == NULL)
+    if (user1 == NULL || user1->user == NULL || user1->user->ticketHead == NULL || flightHead == NULL)
     {
         printf("参数错误\n");
         return -1;
     }
-    linklist_flight * temp = flightHead->next;
-    user_t * tempuser = user1->user;
+    int count = 0;
+    //序号自增删除不可控
+    linklist_ticket * tempNode = user1->user->ticketHead;
+    if (tempNode->next != user1->user->ticketHead)
+    {
+        while (tempNode->next != user1->user->ticketHead)
+        {
+            count++;
+            tempNode = tempNode->next;
+        }
+    }
+    linklist_ticket *newNode = NULL;
+    linklist_ticket *tempTicketHead = user1->user->ticketHead;
+    static int num = 0;
+    linklist_flight *temp = flightHead->next;
+    user_t *tempuser = user1->user;
+
+    // 票券链表分配空间
+    newNode = malloc(sizeof(linklist_ticket));
+    newNode->ticket = malloc(sizeof(ticket_t));
+    if (newNode == NULL || newNode->ticket == NULL)
+    {
+        printf("申请空间失败\n");
+        return -2;
+    }
     while (temp != flightHead)
     {
-
         if (id == temp->flights->id)
         {
             printf("请选则你的座位号\n");
             char str[MAX] = {0};
             scanf("%s", str);
             getchar();
+
             // 判断是否有票
             if (temp->flights->tickets > 0)
             {
+
                 /* code */
                 // 进行赋值
-                tempuser->tick[num].id = temp->flights->id;
+                newNode->ticket->id = temp->flights->id;
                 // 座位号
-                strcpy(tempuser->tick[num].seatNumber, str);
+                strcpy(newNode->ticket->seatNumber, str);
                 // 入口
-                strcpy(tempuser->tick[num].entrance, temp->flights->entrance);
+                strcpy(newNode->ticket->entrance, temp->flights->entrance);
                 // 出发日期
-                strcpy(tempuser->tick[num].date, temp->flights->date);
+                strcpy(newNode->ticket->date, temp->flights->date);
                 // 起始地
-                strcpy(tempuser->tick[num].originalPlace, temp->flights->originalPlace);
+                strcpy(newNode->ticket->originalPlace, temp->flights->originalPlace);
                 // 目的地
-                strcpy(tempuser->tick[num].destination, temp->flights->destination);
+                strcpy(newNode->ticket->destination, temp->flights->destination);
                 // 价格
-                tempuser->tick[num].price = temp->flights->price;
+                newNode->ticket->price = temp->flights->price;
                 // 票的数量减一
                 temp->flights->tickets--;
+                // 序号自增
+                newNode->ticket->uid = count+1;
                 num++;
-                return num;
             }
             else
             {
                 printf("票已售尽");
-                return num;
             }
         }
         temp = temp->next;
     }
+
+    //找到链表的最后一位
+    while (tempTicketHead->next != user1->user->ticketHead)
+    {
+        tempTicketHead = tempTicketHead->next;
+    }
+    // 链表连接
+    newNode->next = tempTicketHead->next;
+    newNode->pre = tempTicketHead;
+    tempTicketHead->next = newNode;
+    // 头节点
+    user1->user->ticketHead->pre = newNode;
 }
 
 // 打印用户飞机票
-void userPrintfTicket(linklist_t *temp, int num)
+void userPrintfTicket(linklist_t *node)
 {
-    if (temp == NULL)
+    if (node->user->ticketHead->next == node->user->ticketHead)
     {
-        printf("参数错误\n");
+        printf("没有车票\n");
         return;
     }
-    user_t *temp1 = temp->user;
+    linklist_ticket *tempTicketHead = node->user->ticketHead->next;
     printf("-------------------------------------------用户航班票--------------------------------------------------\n");
-    for (int i = 0; i < num; i++)
+    while (tempTicketHead != node->user->ticketHead)
     {
         printf("-------------------------------------------------------------------------------------------------------\n");
-        printf("序号：%d  起始地：%s  目的地：%s  起飞时间：%s  入口：%s  座位号：%s  价格：%lf\n", temp1->tick[i].id, temp1->tick[i].originalPlace, temp1->tick[i].destination, temp1->tick[i].date, temp1->tick[i].entrance, temp1->tick[i].seatNumber, temp1->tick[i].price);
+        printf("编号：%d  航班序号：%d  起始地：%s  目的地：%s  起飞时间：%s  入口：%s  座位号：%s  价格：%lf\n", tempTicketHead->ticket->uid, tempTicketHead->ticket->id, tempTicketHead->ticket->originalPlace, tempTicketHead->ticket->destination, tempTicketHead->ticket->date, tempTicketHead->ticket->entrance, tempTicketHead->ticket->seatNumber, tempTicketHead->ticket->price);
+        tempTicketHead = tempTicketHead->next;
     }
 }
 
@@ -147,8 +187,6 @@ int userCentreController(linklist_t *user, linklist_t *head)
         sleep(1);
         system("clear");
     }
-    
-    
 }
 
 /// @brief 查看和修改个人信息
@@ -200,36 +238,42 @@ void changeUserPasswd(linklist_t *user, linklist_t *head)
 // 注销用户（注销后会直接回到登录页面）
 int bannedUser(linklist_t *head, linklist_t *users)
 {
-    int i = 1;
     if (head == NULL || head->next == head || users == NULL)
     {
         printf("参数错误\n");
         return -1;
     }
     linklist_t *temp = head->next;
+    linklist_t *temp1 = NULL;
     while (temp != head)
     {
-        while (i)
+
+        if (temp->user->id == users->user->id)
         {
-            if (temp->user->id == users->user->id)
+            temp1 = temp;
+            // 将节点与链表断开
+            while (temp1 != head)
             {
-                // 将节点与链表断开
-                temp->pre->next = temp->next;
-                temp->next->pre = temp->pre;
-                // 释放user节点的空间
-                free(temp->user);
-                temp->user = NULL;
-                // 释放temp的空间
-                free(temp);
-                i = 0;
+                // 如果找到用户id号，进行删除操作
+                temp1->next->user->id--;
+                temp1 = temp1->next;
             }
-            break;
+            temp->pre->next = temp->next;
+            temp->next->pre = temp->pre;
+            // 释放user节点中ticket的空间
+            deleteTicketLinklist(&(temp->user->ticketHead));
+            // 打印tick链表
+            // userPrintfTicket(users);
+            //  释放user节点的空间
+            free(temp->user);
+            temp->user = NULL;
+            // 释放temp的空间
+            free(temp);
+            temp = NULL;
+            return -1;
         }
-        // 如果找到用户id号，进行删除操作
-        temp->next->user->id--;
         temp = temp->next;
     }
-    return 1;
 }
 
 // 用户查询航班
@@ -238,7 +282,7 @@ void findFlight(linklist_t *head)
 }
 
 // 用户票券模块
-int userTicketController(linklist_t * head , linklist_t *user_t, int ticketNums)
+int userTicketController(linklist_t *head, linklist_t *userNode, linklist_flight *flightHead)
 {
     int funNum = 0;
     while (1)
@@ -250,13 +294,13 @@ int userTicketController(linklist_t * head , linklist_t *user_t, int ticketNums)
         switch (funNum)
         {
         case 1:
-            userPrintfTicket(user_t, ticketNums);
+            userPrintfTicket(userNode);
             break;
         case 2:
-            //userReturnTicket();
+            userReturnTicket(userNode, flightHead);
             break;
         case 3:
-            printf("用户改签\n");
+            userChangeTicket(flightHead, userNode);
             break;
         case 4:
             system("clear");
@@ -268,22 +312,189 @@ int userTicketController(linklist_t * head , linklist_t *user_t, int ticketNums)
 }
 
 // 用户退票
-void userReturnTicket(linklist_t *head, linklist_t *temp, int num)
+void userReturnTicket(linklist_t *userNode, linklist_flight *flightHead)
 {
+    printf("-------------------------------------------用户退票-------------------------------------------\n");
+    userPrintfTicket(userNode);
+    if (userNode == NULL)
+    {
+        printf("参数错误\n");
+        return;
+    }
+    if (userNode->user->ticketHead->next == userNode->user->ticketHead)
+    {
+        printf("抱歉没有飞机票可退\n");
+        return;
+    }
+
     int retNum = 0;
     int flag = 0;
-    printf("输入所退票的序号");
-    scanf("%d" , &retNum);
+    // 航班编号用于暂存
+    int flightid = 0;
+    printf("输入所退票的编号");
+    scanf("%d", &retNum);
     getchar();
     printf("是否退票(0|1)");
-    scanf("%d" , &flag);
+    scanf("%d", &flag);
     getchar();
-
     if (flag == 0)
     {
         return;
-    }else{
-
     }
+    else
+    {
+        linklist_ticket *temp = userNode->user->ticketHead->next;
+        linklist_ticket * temp_next = NULL;
+        while (temp != userNode->user->ticketHead)
+        {
+            if (retNum == temp->ticket->uid)
+            {
+                if (temp->next != userNode->user->ticketHead)
+                {
+                    temp_next = temp->next;
+                    flag = 2;
+                }
+                // 航班编号赋值
+                flightid = temp->ticket->id;
+                // 删除链表节点
+                temp->next->pre = temp->pre;
+                temp->pre->next = temp->next;
+                free(temp->ticket);
+                temp->ticket = NULL;
+                free(temp);
+                temp = NULL;
+                break;
+            }
+
+            temp = temp->next;
+        }
+        linklist_flight *tempFlight = flightHead->next;
+        while (tempFlight != flightHead)
+        {
+            if (tempFlight->flights->id == flightid)
+            {
+                // 对应航班链表数目加一
+                tempFlight->flights->tickets++;
+            }
+            tempFlight = tempFlight->next;
+        }
+
+        //重置用户票券后面的序号
+        if (flag == 2)
+        {
+            while (temp_next != userNode->user->ticketHead)
+            {
+                temp_next->ticket->uid--;
+                temp_next = temp_next->next;
+            }
+        }
+        
+    }
+}
+
+// 用户改签
+void userChangeTicket(linklist_flight *flightHead, linklist_t *userNode)
+{
+    // 原理为用户选择需要改签的票，然后将自己所需改签的票退掉然后改成需要的那一张
+    if (userNode->user->ticketHead->next == userNode->user->ticketHead)
+    {
+        printf("抱歉没有飞机票改签\n");
+        return;
+    }
+    int flag = 0;
+    int uid = 0;
+    int id = 0;
+    int flightid = 0;
+    int i = 0;
     
+    printf("-------------------------------------------用户改签-------------------------------------------\n");
+    printf("-------------------------------------------航班列表-------------------------------------------\n");
+    userFlightPrintf(flightHead);
+    printf("\n");
+    printf("-------------------------------------------本人票券-------------------------------------------\n");
+    userPrintfTicket(userNode);
+    printf("\n");
+    while (1)
+    {
+        printf("输入需要改签的编号");
+        scanf("%d", &uid);
+        getchar();
+        linklist_ticket *temp_id = userNode->user->ticketHead->next;
+        while (temp_id != userNode->user->ticketHead)
+        {
+            if (uid == temp_id->ticket->uid)
+            {
+                i++;
+            }
+            temp_id = temp_id->next;
+        }
+        if (i == 0)
+        {
+            printf("不存在此编号\n");
+            continue;
+        }else{
+            break;
+        }
+    }
+    printf("是否改签(0|1)");
+    scanf("%d", &flag);
+    getchar();
+    if (flag == 0)
+    {
+        return;
+    }
+    else
+    {
+        // 首先退票
+        linklist_ticket *temp = userNode->user->ticketHead->next;
+        linklist_ticket *temp_next = NULL;
+        while (temp != userNode->user->ticketHead)
+        {
+            if (uid == temp->ticket->uid)
+            {
+                if (temp->next != userNode->user->ticketHead)
+                {
+                    temp_next = temp->next;
+                    flag = 2;
+                }
+                // 航班编号赋值
+                flightid = temp->ticket->id;
+                // 删除链表节点
+                temp->next->pre = temp->pre;
+                temp->pre->next = temp->next;
+                free(temp->ticket);
+                temp->ticket = NULL;
+                free(temp);
+                temp = NULL;
+                break;
+            }
+
+            temp = temp->next;
+        }
+        linklist_flight *tempFlight = flightHead->next;
+        while (tempFlight != flightHead)
+        {
+            if (tempFlight->flights->id == flightid)
+            {
+                // 对应航班链表数目加一
+                tempFlight->flights->tickets++;
+            }
+            tempFlight = tempFlight->next;
+        }
+        // 重置用户票券后面的序号
+        if (flag == 2)
+        {
+            while (temp_next != userNode->user->ticketHead)
+            {
+                temp_next->ticket->uid--;
+                temp_next = temp_next->next;
+            }
+        }
+        // 然后重新购买飞机票
+        printf("输入你所需要的航班编号:");
+        scanf("%d", &id);
+        purchaseTickets(id, userNode, flightHead);
+    }
+    printf("-----------------------------------------改签完成-----------------------------------------\n");
+    system("clear");
 }
